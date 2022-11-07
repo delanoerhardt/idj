@@ -4,7 +4,7 @@ OBJ      = $(addprefix target/obj/,$(SRCS:%.cpp=%.o))
 DIR      = $(addprefix target/obj/,$(shell find src/ -type d)) 
 BIN      = target/game.exe
 RM       = rm -rf
-FLAGS    = -I/usr/include/SDL2 -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+FLAGS    = -I/usr/include/SDL2 -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -Iheaders
 
 .PHONY: all all-before clean run
 

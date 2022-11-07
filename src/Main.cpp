@@ -1,4 +1,4 @@
-#include "../headers/Game.h"
+#include "Game.h"
 
 int main(int argc, char **argv) {
     /* Inicializa todas as bibliotecas */
