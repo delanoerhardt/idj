@@ -28,6 +28,6 @@ public:
 private:
     SDL_Texture *mTexture;
     int mWidth;
-    int mWeight;
+    int mHeight;
     SDL_Rect mClipRect;
 };

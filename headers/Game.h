@@ -9,11 +9,9 @@
 
 class Game {
 public:
-    Game(std::string title, u_int32_t width, u_int32_t height);
-
     static Game &GetInstance();
 
-    SDL_Renderer &GetRenderer();
+    SDL_Renderer *GetRenderer();
 
     State &GetState();
 
@@ -22,7 +20,9 @@ public:
     ~Game();
 
 private:
-    Game *mInstance;
+    Game(std::string title, u_int32_t width, u_int32_t height);
+
+    static Game *sInstance;
     SDL_Window *mWindow;
     SDL_Renderer *mRenderer;
     State *mState;
