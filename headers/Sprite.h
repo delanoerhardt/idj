@@ -2,32 +2,36 @@
 
 #include <string>
 
+#include "Component.h"
+#include "GameObject.h"
+
 #define INCLUDE_SDL_IMAGE
 #include "SDL_include.h"
 
-class Sprite {
+class Sprite : public Component {
 public:
-    Sprite();
+    Sprite(GameObject& gameObject);
 
-    Sprite(std::string file);
+    Sprite(GameObject& gameObject, const char* file);
 
-    ~Sprite();
-
-    void Open(std::string file);
+    void Open(const char* file);
 
     void SetClip(int x, int y, int w, int h);
 
-    void Render(int x, int y);
+    virtual void Update(float dt);
 
-    int GetWidth();
+    virtual void Render();
 
-    int GetHeight();
+    virtual bool Is(std::string type);
 
     bool IsOpen();
 
-private:
-    SDL_Texture *mTexture;
+    virtual ~Sprite();
+
     int mWidth;
     int mHeight;
+
+private:
+    SDL_Texture* mTexture;
     SDL_Rect mClipRect;
 };

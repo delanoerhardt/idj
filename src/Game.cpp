@@ -1,5 +1,10 @@
 #include "Game.h"
 
+#include <cstdlib>
+#include <ctime>
+
+#include "Constants.h"
+
 Game *Game::sInstance;
 
 Game::Game(std::string title, u_int32_t width, u_int32_t height) {
@@ -32,7 +37,7 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
         exit(1);
     }
 
-    Mix_AllocateChannels(32);
+    Mix_AllocateChannels(CHANNELS_AMOUNT);
 
     mWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED, width, height, 0);
@@ -48,6 +53,8 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
     }
 
     mState = new State();
+
+    srand(time(NULL));
 }
 
 Game &Game::GetInstance() {

@@ -5,6 +5,9 @@ Music::Music() : mMusic{nullptr} {}
 Music::Music(std::string file) : Music() { Open(file); }
 
 void Music::Open(std::string file) {
+    // ISSO DEVERIA ESTAR NO ROTEIRO, PAREM DE DAR SUSTO NOS ALUNOS
+    Mix_VolumeMusic(16);
+
     mMusic = Mix_LoadMUS(file.c_str());
 
     if (mMusic == nullptr) {

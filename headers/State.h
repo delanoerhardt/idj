@@ -1,7 +1,13 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
+#include "GameObject.h"
 #include "Music.h"
 #include "Sprite.h"
+
+typedef std::vector<std::unique_ptr<GameObject>> t_objects;
 
 class State {
 public:
@@ -15,8 +21,14 @@ public:
 
     void Render();
 
+    void Input();
+
+    void AddObject(int x, int y);
+
+    ~State();
+
 private:
-    Sprite mBackgroundSprite;
+    t_objects mObjects;
     Music mMusic;
     bool mQuitRequested;
 };
