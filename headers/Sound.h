@@ -13,7 +13,7 @@ public:
 
     Sound(GameObject &gameObject, const char *file);
 
-    void Play(int times = 0);
+    void Play(int loops = 0);
 
     void Stop();
 

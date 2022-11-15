@@ -25,12 +25,12 @@ void Sound::Open(const char *file) {
     Mix_VolumeChunk(mChunk, 32);
 }
 
-void Sound::Play(int times) {
+void Sound::Play(int loops) {
     if (mChunk == nullptr) {
         return;
     }
 
-    mChannel = Mix_PlayChannel(-1, mChunk, times);
+    mChannel = Mix_PlayChannel(-1, mChunk, loops);
 
     if (mChannel == -1) {
         printf("Failed to play Sound due to %s\n", SDL_GetError());
