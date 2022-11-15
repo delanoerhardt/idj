@@ -29,6 +29,7 @@ void State::Update(float dt) {
 
     for (int i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Update(dt);
+
         if (mObjects[i]->IsDead()) {
             mObjects.erase(mObjects.begin() + i);
         }
@@ -105,4 +106,4 @@ void State::AddObject(int x, int y) {
     mObjects.emplace_back(enemy);
 }
 
-State::~State() {}
+State::~State() { mObjects.clear(); }

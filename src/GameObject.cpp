@@ -23,6 +23,7 @@ void GameObject::AddComponent(Component* component) {
 void GameObject::RemoveComponent(Component* component) {
     for (auto it = mComponents.begin(); it != mComponents.end(); it++) {
         if (*it == component) {
+            delete component;
             mComponents.erase(it);
             return;
         }
