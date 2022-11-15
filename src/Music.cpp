@@ -14,8 +14,6 @@ void Music::Open(std::string file) {
         printf("Failed to open Music %s due to %s\n", file.c_str(),
                SDL_GetError());
 
-        printf("\n");
-
         exit(1);
     }
 }

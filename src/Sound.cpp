@@ -17,8 +17,6 @@ void Sound::Open(const char *file) {
     if (mChunk == nullptr) {
         printf("Failed to open Sound %s due to %s\n", file, SDL_GetError());
 
-        printf("\n");
-
         exit(1);
     }
 
