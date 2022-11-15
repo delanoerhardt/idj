@@ -27,7 +27,7 @@ void State::LoadAssets() {}
 void State::Update(float dt) {
     Input();
 
-    for (int i = 0; i < mObjects.size(); i++) {
+    for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Update(dt);
 
         if (mObjects[i]->IsDead()) {
@@ -41,7 +41,7 @@ void State::Update(float dt) {
 }
 
 void State::Render() {
-    for (int i = 0; i < mObjects.size(); i++) {
+    for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Render();
     }
 }

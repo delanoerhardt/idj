@@ -12,7 +12,7 @@ class GameObject {
 public:
     GameObject() : mIsDead{false} {}
 
-    GameObject(float x, float y) : mIsDead{false}, mBox{x, y, 0.0, 0.0} {}
+    GameObject(float x, float y) : mBox{x, y, 0.0, 0.0}, mIsDead{false} {}
 
     void Update(float dt);
 
