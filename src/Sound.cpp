@@ -56,13 +56,10 @@ void Sound::FreeAlreadyPlayed(int channel) {
         return;
     }
 
-    Mix_ChannelFinished(NULL);
-
-    Mix_HaltChannel(channel);
-    Mix_FreeChunk(sChunkPlayingInChannel[channel]);
+    Mix_Chunk *chunk = sChunkPlayingInChannel[channel];
     sChunkPlayingInChannel[channel] = nullptr;
 
-    Mix_ChannelFinished(Sound::FreeAlreadyPlayed);
+    Mix_FreeChunk(chunk);
 }
 
 Sound::~Sound() {
