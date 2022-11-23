@@ -2,7 +2,7 @@ ifeq ($(OS),Windows_NT)
 SHELL       = cmd.exe
 SEP        := $(shell echo \)
 else
-SEP         = "/"
+SEP         = /
 endif
 
 DEST        = target
@@ -18,7 +18,7 @@ OBJ         = $(addprefix $(DEST)/obj/,$(subst $(SEP),/,$(SRC_FILES:%.cpp=%.o)))
 else
 SRC_FILES   = $(shell find src -name *.cpp)
 DIR         = $(addprefix $(DEST)$(SEP)obj$(SEP),$(shell find src -type d))
-OBJ         = $(addprefix $(DEST)/obj/,$(SRCS:%.cpp=%.o)) 
+OBJ         = $(addprefix $(DEST)/obj/,$(SRC_FILES:%.cpp=%.o)) 
 endif
 							
 BIN         = $(DEST)$(SEP)game.exe
