@@ -32,7 +32,7 @@ GPP_LIBS    = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 GPP_FLAGS   = $(GPP_INC) $(GPP_WARNS) $(GPP_LIBS)
 
 LOG_DIR     = $(DEST)$(SEP)logs
-RUN_FLAGS   = > $(LOG_DIR)$(SEP)latest.log 2>&1 & disown
+RUN_FLAGS   = 
 
 MKDIRS      = mkdir -p $(DEST)$(SEP) $(DIR) $(LOG_DIR)
 RMDIRS      = rm -rf $(OBJ) $(BIN) $(DEST)
@@ -52,7 +52,7 @@ endif
 endif
 
 
-.PHONY: all all-before clean run
+.PHONY: all all-before clean run silent
 
 all: all-before $(BIN)
 
@@ -68,6 +68,9 @@ $(BIN): $(OBJ)
 
 $(DEST)/obj/%.o: %.cpp
 	$(GPP) -c $< -o $@ $(GPP_FLAGS)
+
+silent: RUN_FLAGS += > $(LOG_DIR)$(SEP)latest.log 2>&1 & disown
+silent: run
 
 run: all
 	./$(BIN) $(RUN_FLAGS)
