@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "Constants.h"
+#include "InputManager.h"
 #include "Resources.h"
 
 Game *Game::sInstance;
@@ -41,8 +42,8 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
     Mix_AllocateChannels(CHANNELS_AMOUNT);
 
     // ISSO DEVERIA ESTAR NO ROTEIRO, PAREM DE DAR SUSTO NOS ALUNOS
-    Mix_VolumeMusic(16);
-    Mix_Volume(-1, 32);
+    Mix_VolumeMusic(10);
+    Mix_Volume(-1, 10);
 
     mWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED, width, height, 0);
@@ -75,12 +76,27 @@ SDL_Renderer *Game::GetRenderer() { return mRenderer; }
 State &Game::GetState() { return *mState; }
 
 void Game::Run() {
+    mFrameStart = SDL_GetTicks();
+
+    uint32_t frameEnd = 0;
+
+    mDeltaTime = 30.0;
+
     while (!mState->QuitRequested()) {
-        mState->Update(0);
+        InputManager::Update();
+
+        mState->Update(mDeltaTime);
+
         mState->Render();
         SDL_RenderPresent(mRenderer);
 
         SDL_Delay(30);
+
+        frameEnd = SDL_GetTicks();
+
+        mDeltaTime = (frameEnd - mFrameStart) / 1000.0;
+
+        mFrameStart = frameEnd;
     }
 }
 

@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "Face.h"
+#include "InputManager.h"
 #include "Sound.h"
 #include "TileMap.h"
 #include "TileSet.h"
@@ -37,8 +38,6 @@ bool State::QuitRequested() { return mQuitRequested; }
 void State::LoadAssets() {}
 
 void State::Update(float dt) {
-    Input();
-
     for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Update(dt);
 
@@ -47,57 +46,25 @@ void State::Update(float dt) {
         }
     }
 
-    if (SDL_QuitRequested()) {
+    if (InputManager::QuitRequested() ||
+        InputManager::KeyPressed(SDLK_ESCAPE)) {
         mQuitRequested = true;
+    }
+
+    if (InputManager::KeyPressed(SDLK_SPACE)) {
+        int mouseX = InputManager::GetMouseX();
+        int mouseY = InputManager::GetMouseY();
+
+        Vec2 pos = Vec2(mouseX, mouseY) +
+                   Vec2(200, 0).Rotate(-M_PI + M_PI * (rand() % 1001) / 500.0);
+
+        AddObject((int)pos.x, (int)pos.y);
     }
 }
 
 void State::Render() {
     for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Render();
-    }
-}
-
-void State::Input() {
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            mQuitRequested = true;
-            break;
-        } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-            int mouseX = event.button.x;
-            int mouseY = event.button.y;
-            for (int i = mObjects.size() - 1; i >= 0; --i) {
-                auto box = mObjects[i]->mBox;
-
-                if (box.Contains(mouseX, mouseY)) {
-                    Face* face = (Face*)mObjects[i]->GetComponent("Face");
-
-                    if (face != nullptr) {
-                        face->Damage(std::rand() % 10 + 10);
-
-                        break;
-                    }
-                }
-            }
-        } else if (event.type == SDL_KEYDOWN) {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                mQuitRequested = true;
-
-                break;
-            } else if (event.key.keysym.sym == SDLK_SPACE) {
-                int mouseX, mouseY;
-
-                SDL_GetMouseState(&mouseX, &mouseY);
-
-                Vec2 pos =
-                    Vec2(mouseX, mouseY) +
-                    Vec2(200, 0).Rotate(-M_PI + M_PI * (rand() % 1001) / 500.0);
-
-                AddObject((int)pos.x, (int)pos.y);
-            }
-        }
     }
 }
 

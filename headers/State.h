@@ -21,8 +21,6 @@ public:
 
     void Render();
 
-    void Input();
-
     void AddObject(int x, int y);
 
     ~State();

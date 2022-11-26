@@ -19,10 +19,15 @@ public:
 
     ~Game();
 
+    float mDeltaTime;
+
 private:
     Game(std::string title, u_int32_t width, u_int32_t height);
 
     static Game *sInstance;
+
+    uint32_t mFrameStart;
+
     SDL_Window *mWindow;
     SDL_Renderer *mRenderer;
     State *mState;
