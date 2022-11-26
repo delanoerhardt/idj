@@ -1,16 +1,21 @@
 #pragma once
 
 #define INCLUDE_SDL_IMAGE
-#include "SDL_include.h"
+#include "../SDL_include.h"
 
 class Rect {
 public:
     float x, y, w, h;
 
     Rect() : x{0}, y{0}, w{0}, h{0} {}
+
     Rect(int x, int y, int w, int h)
         : x{(float)x}, y{(float)y}, w{(float)w}, h{(float)h} {}
+
     Rect(float x, float y, float w, float h) : x{x}, y{y}, w{w}, h{h} {}
+
+    Rect(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
+        : x{(float)x}, y{(float)y}, w{(float)w}, h{(float)h} {}
 
     Rect(SDL_Rect &sdlRect) {
         x = (float)sdlRect.x;

@@ -4,18 +4,30 @@
 
 #include "Face.h"
 #include "Sound.h"
+#include "TileMap.h"
+#include "TileSet.h"
 #include "util/Vec2.h"
+
+TileMap* tileMap;
 
 State::State()
     : mObjects{}, mMusic{"assets/audio/stageState.ogg"}, mQuitRequested(false) {
+    TileSet* tileSet = new TileSet(64, 64, "assets/img/tileset.png");
+
     GameObject* windowObject = new GameObject(0, 0);
 
     Sprite* backgroundSprite =
         new Sprite(*windowObject, "assets/img/ocean.jpg");
-
     windowObject->AddComponent(backgroundSprite);
 
     mObjects.emplace_back(windowObject);
+
+    GameObject* cameraObject = new GameObject(0, 0);
+
+    tileMap = new TileMap(*cameraObject, "assets/map/tileMap.txt", tileSet);
+    cameraObject->AddComponent(tileMap);
+
+    mObjects.emplace_back(cameraObject);
 
     mMusic.Play();
 }
