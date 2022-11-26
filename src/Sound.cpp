@@ -1,27 +1,16 @@
 #include "Sound.h"
 
 #include "Constants.h"
-
-Mix_Chunk *Sound::sChunkPlayingInChannel[CHANNELS_AMOUNT];
+#include "Resources.h"
 
 Sound::Sound(GameObject &gameObject)
     : Component{gameObject}, mChunk{nullptr}, mChannel{-1} {}
 
-Sound::Sound(GameObject &gameObject, const char *file) : Sound(gameObject) {
+Sound::Sound(GameObject &gameObject, std::string file) : Sound(gameObject) {
     Open(file);
 }
 
-void Sound::Open(const char *file) {
-    mChunk = Mix_LoadWAV(file);
-
-    if (mChunk == nullptr) {
-        printf("Failed to open Sound %s due to %s\n", file, SDL_GetError());
-
-        exit(1);
-    }
-
-    Mix_VolumeChunk(mChunk, 32);
-}
+void Sound::Open(std::string file) { mChunk = Resources::GetSound(file); }
 
 void Sound::Play(int loops) {
     if (mChunk == nullptr) {
@@ -51,23 +40,4 @@ void Sound::Render() {}
 
 bool Sound::Is(std::string type) { return type == "Sound"; }
 
-void Sound::FreeAlreadyPlayed(int channel) {
-    if (sChunkPlayingInChannel[channel] == nullptr) {
-        return;
-    }
-
-    Mix_Chunk *chunk = sChunkPlayingInChannel[channel];
-    sChunkPlayingInChannel[channel] = nullptr;
-
-    Mix_FreeChunk(chunk);
-}
-
-Sound::~Sound() {
-    if (mChannel == -1 || mChunk == nullptr) {
-        return;
-    }
-
-    sChunkPlayingInChannel[mChannel] = mChunk;
-
-    Mix_ChannelFinished(Sound::FreeAlreadyPlayed);
-}
+Sound::~Sound() {}

@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "Constants.h"
+#include "Resources.h"
 
 Game *Game::sInstance;
 
@@ -38,6 +39,10 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
     }
 
     Mix_AllocateChannels(CHANNELS_AMOUNT);
+
+    // ISSO DEVERIA ESTAR NO ROTEIRO, PAREM DE DAR SUSTO NOS ALUNOS
+    Mix_VolumeMusic(16);
+    Mix_Volume(-1, 32);
 
     mWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED, width, height, 0);
@@ -81,6 +86,10 @@ void Game::Run() {
 
 Game::~Game() {
     delete mState;
+
+    Resources::ClearImages();
+    Resources::ClearMusics();
+    Resources::ClearSounds();
 
     Mix_CloseAudio();
     Mix_Quit();

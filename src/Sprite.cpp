@@ -1,37 +1,22 @@
 #include "Sprite.h"
 
 #include "Game.h"
+#include "Resources.h"
 
 Sprite::Sprite(GameObject& gameObject)
-    : Component{gameObject}, mTexture{nullptr} {}
+    : Component{gameObject}, mTexture{nullptr, 0, 0} {}
 
-Sprite::Sprite(GameObject& gameObject, const char* file) : Sprite{gameObject} {
+Sprite::Sprite(GameObject& gameObject, std::string file) : Sprite{gameObject} {
     Open(file);
 }
 
-void Sprite::Open(const char* file) {
-    if (mTexture != nullptr) {
-        SDL_DestroyTexture(mTexture);
-    }
+void Sprite::Open(std::string file) {
+    mTexture = Resources::GetImage(file);
 
-    mTexture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file);
+    SetClip(0, 0, mTexture.width, mTexture.height);
 
-    if (mTexture == NULL) {
-        printf("Failed to open Sprite %s due to %s\n", file, SDL_GetError());
-        exit(1);
-    }
-
-    int errorValue =
-        SDL_QueryTexture(mTexture, nullptr, nullptr, &mWidth, &mHeight);
-
-    if (errorValue != 0) {
-        printf("Erro ao query textura\n%s\n", SDL_GetError());
-    }
-
-    SetClip(0, 0, mWidth, mHeight);
-
-    mGameObject.mBox.w = mWidth;
-    mGameObject.mBox.h = mHeight;
+    mGameObject.mBox.w = mTexture.width;
+    mGameObject.mBox.h = mTexture.height;
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
@@ -41,23 +26,19 @@ void Sprite::SetClip(int x, int y, int w, int h) {
 void Sprite::Update(float dt) {}
 
 void Sprite::Render() {
-    if (mTexture == nullptr) {
+    if (mTexture.sdlTexture == nullptr) {
         return;
     }
 
     Rect& rect = mGameObject.mBox;
 
     SDL_Rect target = rect.toSDL();
-    SDL_RenderCopy(Game::GetInstance().GetRenderer(), mTexture, &mClipRect,
-                   &target);
+    SDL_RenderCopy(Game::GetInstance().GetRenderer(), mTexture.sdlTexture,
+                   &mClipRect, &target);
 }
 
 bool Sprite::Is(std::string type) { return type == "Sprite"; }
 
-bool Sprite::IsOpen() { return mTexture != nullptr; }
+bool Sprite::IsOpen() { return mTexture.sdlTexture != nullptr; }
 
-Sprite::~Sprite() {
-    if (mTexture != nullptr) {
-        SDL_DestroyTexture(mTexture);
-    }
-}
+Sprite::~Sprite() {}

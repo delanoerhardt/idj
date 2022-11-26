@@ -1,22 +1,12 @@
 #include "Music.h"
 
+#include "Resources.h"
+
 Music::Music() : mMusic{nullptr} {}
 
 Music::Music(std::string file) : Music() { Open(file); }
 
-void Music::Open(std::string file) {
-    // ISSO DEVERIA ESTAR NO ROTEIRO, PAREM DE DAR SUSTO NOS ALUNOS
-    Mix_VolumeMusic(16);
-
-    mMusic = Mix_LoadMUS(file.c_str());
-
-    if (mMusic == nullptr) {
-        printf("Failed to open Music %s due to %s\n", file.c_str(),
-               SDL_GetError());
-
-        exit(1);
-    }
-}
+void Music::Open(std::string file) { mMusic = Resources::GetMusic(file); }
 
 void Music::Play(int times) {
     if (mMusic == nullptr) {

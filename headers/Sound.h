@@ -11,13 +11,13 @@ class Sound : public Component {
 public:
     Sound(GameObject &gameObject);
 
-    Sound(GameObject &gameObject, const char *file);
+    Sound(GameObject &gameObject, std::string file);
 
     void Play(int loops = 0);
 
     void Stop();
 
-    void Open(const char *file);
+    void Open(std::string file);
 
     bool IsOpen();
 
@@ -28,10 +28,6 @@ public:
     virtual bool Is(std::string type);
 
     virtual ~Sound();
-
-    static Mix_Chunk *sChunkPlayingInChannel[];
-
-    static void FreeAlreadyPlayed(int channel);
 
 private:
     Mix_Chunk *mChunk;
