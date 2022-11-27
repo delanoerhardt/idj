@@ -1,5 +1,6 @@
 #include "Face.h"
 
+#include "Camera.h"
 #include "InputManager.h"
 #include "Sound.h"
 
@@ -13,7 +14,9 @@ void Face::Damage(int damage) {
 
         Sound* sound = (Sound*)mGameObject.GetComponent("Sound");
 
-        if (sound != nullptr) sound->Play();
+        if (sound != nullptr) {
+            sound->Play();
+        }
     }
 }
 
@@ -21,9 +24,11 @@ void Face::Update(float dt) {
     if (InputManager::ButtonPressed(SDL_BUTTON_LEFT)) {
         ButtonState& button = InputManager::GetButtonState(SDL_BUTTON_LEFT);
 
-        auto box = mGameObject.mBox;
+        Rect box = mGameObject.mBox;
 
-        if (box.Contains(button.mouseX, button.mouseY)) {
+        Vec2 point = Vec2{button.mouseX, button.mouseY} + Camera::sPos;
+
+        if (box.Contains(point)) {
             Damage(std::rand() % 10 + 10);
             InputManager::SetButtonHandled(button);
         }

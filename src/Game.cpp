@@ -42,8 +42,8 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
     Mix_AllocateChannels(CHANNELS_AMOUNT);
 
     // ISSO DEVERIA ESTAR NO ROTEIRO, PAREM DE DAR SUSTO NOS ALUNOS
-    Mix_VolumeMusic(10);
-    Mix_Volume(-1, 10);
+    Mix_VolumeMusic(GAME_VOLUME);
+    Mix_Volume(-1, GAME_VOLUME);
 
     mWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED, width, height, 0);
@@ -65,7 +65,7 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
 
 Game &Game::GetInstance() {
     if (sInstance == nullptr) {
-        sInstance = new Game("Game", 1024, 600);
+        sInstance = new Game("Game", WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     return *sInstance;

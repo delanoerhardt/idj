@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include "Camera.h"
 #include "Game.h"
 #include "Resources.h"
 
@@ -30,7 +31,9 @@ void Sprite::Render() {
         return;
     }
 
-    Rect& rect = mGameObject.mBox;
+    Vec2 cameraPos = Camera::sPos;
+
+    Rect rect = mGameObject.mBox - cameraPos;
 
     SDL_Rect target = rect.toSDL();
     SDL_RenderCopy(Game::GetInstance().GetRenderer(), mTexture.sdlTexture,

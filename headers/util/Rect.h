@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vec2.h"
+
 #define INCLUDE_SDL_IMAGE
 #include "../SDL_include.h"
 
@@ -30,133 +32,157 @@ public:
         return pointX > x && pointX < x + w && pointY > y && pointY < y + h;
     }
 
-    Rect operator+=(const Rect &added) {
-        x += added.x;
-        y += added.y;
-        w += added.w;
-        h += added.h;
+    bool Contains(Vec2 &vector) { return Contains(vector.x, vector.y); }
+
+    Rect operator+=(const Rect &rhs) {
+        x += rhs.x;
+        y += rhs.y;
+        w += rhs.w;
+        h += rhs.h;
         return *this;
     }
 
-    Rect operator+=(int added) {
-        x += added;
-        y += added;
-        w += added;
-        h += added;
+    Rect operator+=(const Vec2 &rhs) {
+        x += rhs.x;
+        y += rhs.y;
         return *this;
     }
 
-    Rect operator+=(float added) {
-        x += added;
-        x += added;
-        x += added;
-        x += added;
+    Rect operator+=(int rhs) {
+        x += rhs;
+        y += rhs;
+        w += rhs;
+        h += rhs;
         return *this;
     }
 
-    Rect operator-=(const Rect &added) {
-        x -= added.x;
-        y -= added.y;
-        w -= added.w;
-        h -= added.h;
+    Rect operator+=(float rhs) {
+        x += rhs;
+        x += rhs;
+        x += rhs;
+        x += rhs;
         return *this;
     }
 
-    Rect operator-=(int added) {
-        x -= added;
-        y -= added;
-        w -= added;
-        h -= added;
+    Rect operator-=(const Rect &rhs) {
+        x -= rhs.x;
+        y -= rhs.y;
+        w -= rhs.w;
+        h -= rhs.h;
         return *this;
     }
 
-    Rect operator-=(float added) {
-        x -= added;
-        y -= added;
-        w -= added;
-        h -= added;
+    Rect operator-=(const Vec2 &rhs) {
+        x -= rhs.x;
+        y -= rhs.y;
         return *this;
     }
 
-    Rect operator*=(int added) {
-        x *= added;
-        y *= added;
-        w *= added;
-        h *= added;
+    Rect operator-=(int rhs) {
+        x -= rhs;
+        y -= rhs;
+        w -= rhs;
+        h -= rhs;
         return *this;
     }
 
-    Rect operator/=(int added) {
-        x /= added;
-        y /= added;
-        w /= added;
-        h /= added;
+    Rect operator-=(float rhs) {
+        x -= rhs;
+        y -= rhs;
+        w -= rhs;
+        h -= rhs;
         return *this;
     }
 
-    Rect operator*=(float added) {
-        x *= added;
-        y *= added;
-        w *= added;
-        h *= added;
+    Rect operator*=(int rhs) {
+        x *= rhs;
+        y *= rhs;
+        w *= rhs;
+        h *= rhs;
         return *this;
     }
 
-    Rect operator/=(float added) {
-        x /= added;
-        y /= added;
-        w /= added;
-        h /= added;
+    Rect operator/=(int rhs) {
+        x /= rhs;
+        y /= rhs;
+        w /= rhs;
+        h /= rhs;
         return *this;
     }
 
-    friend Rect operator+(Rect lhs, const Rect &added) {
-        lhs += added;
+    Rect operator*=(float rhs) {
+        x *= rhs;
+        y *= rhs;
+        w *= rhs;
+        h *= rhs;
+        return *this;
+    }
+
+    Rect operator/=(float rhs) {
+        x /= rhs;
+        y /= rhs;
+        w /= rhs;
+        h /= rhs;
+        return *this;
+    }
+
+    friend Rect operator+(Rect lhs, const Rect &rhs) {
+        lhs += rhs;
         return lhs;
     }
 
-    friend Rect operator+(Rect lhs, int added) {
-        lhs += added;
+    friend Rect operator+(Rect lhs, const Vec2 &rhs) {
+        lhs += rhs;
         return lhs;
     }
 
-    friend Rect operator+(Rect lhs, float added) {
-        lhs += added;
+    friend Rect operator+(Rect lhs, int rhs) {
+        lhs += rhs;
         return lhs;
     }
 
-    friend Rect operator-(Rect lhs, const Rect &added) {
-        lhs -= added;
+    friend Rect operator+(Rect lhs, float rhs) {
+        lhs += rhs;
         return lhs;
     }
 
-    friend Rect operator-(Rect lhs, int added) {
-        lhs -= added;
+    friend Rect operator-(Rect lhs, const Rect &rhs) {
+        lhs -= rhs;
         return lhs;
     }
 
-    friend Rect operator-(Rect lhs, float added) {
-        lhs -= added;
+    friend Rect operator-(Rect lhs, const Vec2 &rhs) {
+        lhs -= rhs;
         return lhs;
     }
 
-    friend Rect operator*(Rect lhs, int added) {
-        lhs *= added;
+    friend Rect operator-(Rect lhs, int rhs) {
+        lhs -= rhs;
         return lhs;
     }
 
-    friend Rect operator*(Rect lhs, float added) {
-        lhs *= added;
+    friend Rect operator-(Rect lhs, float rhs) {
+        lhs -= rhs;
         return lhs;
     }
 
-    friend Rect operator/(Rect lhs, int added) {
-        lhs /= added;
+    friend Rect operator*(Rect lhs, int rhs) {
+        lhs *= rhs;
         return lhs;
     }
 
-    friend Rect operator/(Rect lhs, float added) {
-        lhs /= added;
+    friend Rect operator*(Rect lhs, float rhs) {
+        lhs *= rhs;
+        return lhs;
+    }
+
+    friend Rect operator/(Rect lhs, int rhs) {
+        lhs /= rhs;
+        return lhs;
+    }
+
+    friend Rect operator/(Rect lhs, float rhs) {
+        lhs /= rhs;
         return lhs;
     }
 };

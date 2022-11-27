@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "Camera.h"
+#include "CameraFollower.h"
 #include "Face.h"
 #include "InputManager.h"
 #include "Sound.h"
@@ -20,6 +22,7 @@ State::State()
     Sprite* backgroundSprite =
         new Sprite(*windowObject, "assets/img/ocean.jpg");
     windowObject->AddComponent(backgroundSprite);
+    windowObject->AddComponent(new CameraFollower(*windowObject));
 
     mObjects.emplace_back(windowObject);
 
@@ -38,6 +41,8 @@ bool State::QuitRequested() { return mQuitRequested; }
 void State::LoadAssets() {}
 
 void State::Update(float dt) {
+    Camera::Update(dt);
+
     for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Update(dt);
 
@@ -69,7 +74,9 @@ void State::Render() {
 }
 
 void State::AddObject(int x, int y) {
-    GameObject* enemy = new GameObject(x, y);
+    Vec2 cameraPos = Camera::sPos;
+
+    GameObject* enemy = new GameObject(x + cameraPos.x, y + cameraPos.y);
 
     Sprite* sprite = new Sprite(*enemy, "assets/img/penguinface.png");
     Sound* sound = new Sound(*enemy, "assets/audio/boom.wav");
