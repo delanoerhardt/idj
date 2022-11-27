@@ -34,6 +34,10 @@ public:
 
     bool Contains(Vec2 &vector) { return Contains(vector.x, vector.y); }
 
+    Vec2 Center() { return Vec2{x + w / 2, y + h / 2}; }
+
+    Vec2 CenterDistance(Rect &rhs) { return this->Center() - rhs.Center(); }
+
     Rect operator+=(const Rect &rhs) {
         x += rhs.x;
         y += rhs.y;
@@ -102,19 +106,19 @@ public:
         return *this;
     }
 
-    Rect operator/=(int rhs) {
-        x /= rhs;
-        y /= rhs;
-        w /= rhs;
-        h /= rhs;
-        return *this;
-    }
-
     Rect operator*=(float rhs) {
         x *= rhs;
         y *= rhs;
         w *= rhs;
         h *= rhs;
+        return *this;
+    }
+
+    Rect operator/=(int rhs) {
+        x /= rhs;
+        y /= rhs;
+        w /= rhs;
+        h /= rhs;
         return *this;
     }
 
