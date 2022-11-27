@@ -12,6 +12,8 @@ public:
 
     Vec2(int x, int y) : x{(float)x}, y{(float)y} {}
 
+    Vec2(uint32_t x, uint32_t y) : x{(float)x}, y{(float)y} {}
+
     Vec2 &Rotate(float angle) {
         float x1 = x * cos(angle) - y * sin(angle);
         float y1 = x * sin(angle) + y * cos(angle);
@@ -27,15 +29,15 @@ public:
         return *this;
     }
 
-    friend Vec2 operator+(Vec2 lhs, const Vec2 &rhs) {
-        lhs += rhs;
-        return lhs;
-    }
-
     Vec2 operator*=(const float &rhs) {
         x *= rhs;
         y *= rhs;
         return *this;
+    }
+
+    friend Vec2 operator+(Vec2 lhs, const Vec2 &rhs) {
+        lhs += rhs;
+        return lhs;
     }
 
     friend Vec2 operator*(Vec2 lhs, const float &rhs) {
