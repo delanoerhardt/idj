@@ -1,4 +1,4 @@
-#include "InputManager.h"
+#include "resources/InputManager.h"
 
 #define INCLUDE_SDL
 #include "SDL_include.h"

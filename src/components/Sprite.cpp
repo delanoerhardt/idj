@@ -1,8 +1,8 @@
-#include "Sprite.h"
+#include "components/Sprite.h"
 
 #include "Camera.h"
 #include "Game.h"
-#include "Resources.h"
+#include "resources/Resources.h"
 
 Sprite::Sprite(GameObject& gameObject)
     : Component{gameObject}, mTexture{nullptr, 0, 0} {}

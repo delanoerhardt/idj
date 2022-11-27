@@ -4,8 +4,8 @@
 #include <ctime>
 
 #include "Constants.h"
-#include "InputManager.h"
-#include "Resources.h"
+#include "resources/InputManager.h"
+#include "resources/Resources.h"
 
 Game *Game::sInstance;
 

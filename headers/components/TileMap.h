@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "TileSet.h"
+#include "resources/TileSet.h"
 
 class TileMap : public Component {
 public:

@@ -1,7 +1,7 @@
-#include "Sound.h"
+#include "components/Sound.h"
 
 #include "Constants.h"
-#include "Resources.h"
+#include "resources/Resources.h"
 
 Sound::Sound(GameObject &gameObject)
     : Component{gameObject}, mChunk{nullptr}, mChannel{-1} {}

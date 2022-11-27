@@ -1,7 +1,7 @@
-#include "TileSet.h"
+#include "resources/TileSet.h"
 
 #include "Game.h"
-#include "Resources.h"
+#include "resources/Resources.h"
 
 // uso de Sprite removido devido ao alto acoplamento de
 // Sprite com GameObject

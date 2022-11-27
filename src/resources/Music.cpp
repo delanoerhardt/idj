@@ -1,6 +1,6 @@
-#include "Music.h"
+#include "resources/Music.h"
 
-#include "Resources.h"
+#include "resources/Resources.h"
 
 Music::Music() : mMusic{nullptr} {}
 

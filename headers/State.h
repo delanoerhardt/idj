@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "GameObject.h"
-#include "Music.h"
-#include "Sprite.h"
+#include "components/Sprite.h"
+#include "resources/Music.h"
 
 typedef std::vector<std::unique_ptr<GameObject>> t_objects;
 

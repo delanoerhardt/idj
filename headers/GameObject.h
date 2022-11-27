@@ -5,7 +5,7 @@
 
 class GameObject;
 
-#include "Component.h"
+#include "components/Component.h"
 #include "util/Rect.h"
 
 class GameObject {

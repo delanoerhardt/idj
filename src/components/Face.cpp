@@ -1,8 +1,8 @@
-#include "Face.h"
+#include "components/Face.h"
 
 #include "Camera.h"
-#include "InputManager.h"
-#include "Sound.h"
+#include "components/Sound.h"
+#include "resources/InputManager.h"
 
 Face::Face(GameObject& gameObject) : Component(gameObject), mHitpoints{30} {}
 

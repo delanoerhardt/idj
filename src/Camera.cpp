@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 #include "Constants.h"
-#include "InputManager.h"
+#include "resources/InputManager.h"
 
 Vec2 Camera::sPos;
 Vec2 Camera::sSpeed;

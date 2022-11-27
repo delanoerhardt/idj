@@ -4,7 +4,7 @@
 
 #include "Component.h"
 #include "GameObject.h"
-#include "Texture.h"
+#include "resources/Texture.h"
 
 class Sprite : public Component {
 public:

@@ -1,4 +1,4 @@
-#include "Resources.h"
+#include "resources/Resources.h"
 
 std::unordered_map<std::string, Texture> Resources::imageTable;
 std::unordered_map<std::string, Mix_Music*> Resources::musicTable;

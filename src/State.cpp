@@ -3,12 +3,12 @@
 #include <math.h>
 
 #include "Camera.h"
-#include "CameraFollower.h"
-#include "Face.h"
-#include "InputManager.h"
-#include "Sound.h"
-#include "TileMap.h"
-#include "TileSet.h"
+#include "components/CameraFollower.h"
+#include "components/Face.h"
+#include "components/Sound.h"
+#include "components/TileMap.h"
+#include "resources/InputManager.h"
+#include "resources/TileSet.h"
 #include "util/Vec2.h"
 
 TileMap* tileMap;
