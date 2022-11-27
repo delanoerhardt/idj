@@ -35,7 +35,7 @@ LOG_DIR     = $(DEST)$(SEP)logs
 RUN_FLAGS   = 
 
 MKDIRS      = mkdir -p $(DEST)$(SEP) $(DIR) $(LOG_DIR)
-RMDIRS      = rm -rf $(OBJ) $(BIN) $(DEST)
+RMDIRS      = rm -rf $(DEST)
 
 
 ifeq ($(OS),Windows_NT)
