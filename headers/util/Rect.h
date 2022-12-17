@@ -1,5 +1,10 @@
 #pragma once
 
+#include <sstream>
+
+// Forward declaration
+class Vec2;
+
 #include "Vec2.h"
 
 #define INCLUDE_SDL_IMAGE
@@ -37,6 +42,22 @@ public:
     Vec2 Center() { return Vec2{x + w / 2, y + h / 2}; }
 
     Vec2 CenterDistance(Rect &rhs) { return this->Center() - rhs.Center(); }
+
+    void SetCenterTo(const Vec2 &rhs) {
+        x = rhs.x - w / 2;
+        y = rhs.y - h / 2;
+    }
+
+    std::string toString() {
+        std::stringstream ss;
+        ss << "{ x: " << x << ", y: " << y << ", w: " << w << ", h: " << h
+           << " }";
+        return ss.str();
+    }
+
+    Rect Scale(float scaleX, float scaleY) {
+        return Rect{x, y, w * scaleX, h * scaleY};
+    }
 
     Rect operator+=(const Rect &rhs) {
         x += rhs.x;

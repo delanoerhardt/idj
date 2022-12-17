@@ -46,6 +46,8 @@ public:
 
     static int GetMouseY();
 
+    static Vec2 GetMousePos() { return Vec2{sMouseX, sMouseY}; }
+
     static bool QuitRequested();
 
     static uint32_t sCurrendUpdateTick;

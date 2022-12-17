@@ -3,8 +3,8 @@
 #include <math.h>
 
 #include "Camera.h"
+#include "components/Alien.h"
 #include "components/CameraFollower.h"
-#include "components/Face.h"
 #include "components/Sound.h"
 #include "components/TileMap.h"
 #include "resources/InputManager.h"
@@ -13,8 +13,7 @@
 
 TileMap* tileMap;
 
-State::State()
-    : mObjects{}, mMusic{"assets/audio/stageState.ogg"}, mQuitRequested(false) {
+State::State() : mObjects{}, mMusic{"assets/audio/stageState.ogg"} {
     TileSet* tileSet = new TileSet(64, 64, "assets/img/tileset.png");
 
     GameObject* windowObject = new GameObject(0, 0);
@@ -33,12 +32,27 @@ State::State()
 
     mObjects.emplace_back(cameraObject);
 
+    GameObject* alienObject = new GameObject(512, 300);
+    alienObject->AddComponent(new Alien(*alienObject, 4));
+
+    mObjects.emplace_back(alienObject);
+
     mMusic.Play();
 }
 
 bool State::QuitRequested() { return mQuitRequested; }
 
 void State::LoadAssets() {}
+
+void State::Start() {
+    LoadAssets();
+
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
+        mObjects[i]->Start();
+    }
+
+    mStarted = true;
+}
 
 void State::Update(float dt) {
     Camera::Update(dt);
@@ -55,16 +69,6 @@ void State::Update(float dt) {
         InputManager::KeyPressed(SDLK_ESCAPE)) {
         mQuitRequested = true;
     }
-
-    if (InputManager::KeyPressed(SDLK_SPACE)) {
-        int mouseX = InputManager::GetMouseX();
-        int mouseY = InputManager::GetMouseY();
-
-        Vec2 pos = Vec2(mouseX, mouseY) +
-                   Vec2(200, 0).Rotate(-M_PI + M_PI * (rand() % 1001) / 500.0);
-
-        AddObject((int)pos.x, (int)pos.y);
-    }
 }
 
 void State::Render() {
@@ -73,23 +77,23 @@ void State::Render() {
     }
 }
 
-void State::AddObject(int x, int y) {
-    Vec2 cameraPos = Camera::sPos;
+std::weak_ptr<GameObject> State::AddObject(GameObject* gameObject) {
+    std::shared_ptr<GameObject>& objectSharedPointer =
+        mObjects.emplace_back(gameObject);
 
-    GameObject* enemy = new GameObject(x + cameraPos.x, y + cameraPos.y);
+    if (mStarted) gameObject->Start();
 
-    Sprite* sprite = new Sprite(*enemy, "assets/img/penguinface.png");
-    Sound* sound = new Sound(*enemy, "assets/audio/boom.wav");
-    Face* face = new Face(*enemy);
+    return std::weak_ptr(objectSharedPointer);
+}
 
-    enemy->mBox.x -= enemy->mBox.w / 2;
-    enemy->mBox.y -= enemy->mBox.h / 2;
+std::weak_ptr<GameObject> State::GetObject(GameObject* gameObject) {
+    for (auto it = mObjects.begin(); it != mObjects.end(); it++) {
+        if (it->get() == gameObject) {
+            return std::weak_ptr(*it);
+        }
+    }
 
-    enemy->AddComponent(sprite);
-    enemy->AddComponent(sound);
-    enemy->AddComponent(face);
-
-    mObjects.emplace_back(enemy);
+    return std::weak_ptr<GameObject>{};
 }
 
 State::~State() { mObjects.clear(); }

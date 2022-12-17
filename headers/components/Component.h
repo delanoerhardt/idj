@@ -10,9 +10,11 @@ class Component {
 public:
     Component(GameObject& gameObject) : mGameObject{gameObject} {}
 
-    virtual void Update(float dt) = 0;
+    virtual void Start() {}
 
-    virtual void Render() = 0;
+    virtual void Update(float dt) {}
+
+    virtual void Render() {}
 
     virtual bool Is(std::string type) = 0;
 

@@ -6,9 +6,8 @@
 // uso de Sprite removido devido ao alto acoplamento de
 // Sprite com GameObject
 
-TileSet::TileSet(int tileWidth, int tileHeight, std::string file) {
-    mTexture = Resources::GetImage(file);
-
+TileSet::TileSet(int tileWidth, int tileHeight, std::string file)
+    : mTexture{Resources::GetImage(file)} {
     mTileWidth = tileWidth;
     mTileHeight = tileHeight;
 

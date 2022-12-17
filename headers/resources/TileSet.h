@@ -16,7 +16,7 @@ public:
 private:
     // uso de Sprite removido devido ao alto acoplamento de
     // Sprite com GameObject
-    Texture mTexture;
+    Texture& mTexture;
 
     int mRows;
     int mColumns;

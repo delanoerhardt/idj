@@ -3,6 +3,13 @@
 #include <math.h>
 
 #include <cstdint>
+#include <sstream>
+
+#define RAD2DEG (180 / M_PI)
+#define DEG2RAD (1 / RAD2DEG)
+
+// Forward declaration
+class Rect;
 
 class Vec2 {
 public:
@@ -31,18 +38,31 @@ public:
 
     Vec2 Normalized() {
         float length = Length();
+        if (length == 0) {
+            return Vec2{0, 0};
+        }
         return Vec2{x / length, y / length};
     }
 
     double Angle() { return atan2(y, x); }
 
-    double AngleBetween(Vec2 &rhs) { return atan2(y - rhs.y, x - rhs.x); }
+    double AngleBetween(Vec2 rhs) { return atan2(y - rhs.y, x - rhs.x); }
+
+    float DotProduct(Vec2 rhs) { return x * rhs.x + y * rhs.y; }
+
+    std::string toString() {
+        std::stringstream ss;
+        ss << "{ x: " << x << ", y: " << y << " }";
+        return ss.str();
+    }
 
     Vec2 operator+=(const Vec2 &rhs) {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
+
+    Vec2 operator+=(const Rect &rhs);
 
     Vec2 operator+=(const int rhs) {
         x += rhs;
@@ -61,6 +81,8 @@ public:
         y -= rhs.y;
         return *this;
     }
+
+    Vec2 operator-=(const Rect &rhs);
 
     Vec2 operator-=(const int rhs) {
         x -= rhs;
@@ -103,6 +125,11 @@ public:
         return lhs;
     }
 
+    friend Vec2 operator+(Vec2 lhs, const Rect &rhs) {
+        lhs += rhs;
+        return lhs;
+    }
+
     friend Vec2 operator+(Vec2 lhs, const int rhs) {
         lhs += rhs;
         return lhs;
@@ -114,6 +141,11 @@ public:
     }
 
     friend Vec2 operator-(Vec2 lhs, const Vec2 &rhs) {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    friend Vec2 operator-(Vec2 lhs, const Rect &rhs) {
         lhs -= rhs;
         return lhs;
     }

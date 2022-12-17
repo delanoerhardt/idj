@@ -7,7 +7,7 @@
 #include "components/Sprite.h"
 #include "resources/Music.h"
 
-typedef std::vector<std::unique_ptr<GameObject>> t_objects;
+typedef std::vector<std::shared_ptr<GameObject>> t_objects;
 
 class State {
 public:
@@ -17,16 +17,24 @@ public:
 
     void LoadAssets();
 
+    void Start();
+
     void Update(float dt);
 
     void Render();
 
-    void AddObject(int x, int y);
+    std::weak_ptr<GameObject> AddObject(GameObject *gameObject);
+
+    std::weak_ptr<GameObject> GetObject(GameObject *gameObject);
 
     ~State();
 
 private:
     t_objects mObjects;
+
     Music mMusic;
-    bool mQuitRequested;
+
+    bool mStarted = false;
+
+    bool mQuitRequested = false;
 };

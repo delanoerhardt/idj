@@ -1,5 +1,13 @@
 #include "GameObject.h"
 
+void GameObject::Start() {
+    for (auto&& component : mComponents) {
+        component->Start();
+    }
+
+    mStarted = true;
+}
+
 void GameObject::Update(float dt) {
     for (auto it = mComponents.begin(); it != mComponents.end(); it++) {
         (*it)->Update(dt);
@@ -18,6 +26,8 @@ void GameObject::RequestDelete() { mIsDead = true; }
 
 void GameObject::AddComponent(Component* component) {
     mComponents.push_back(component);
+
+    if (mStarted) component->Start();
 }
 
 void GameObject::RemoveComponent(Component* component) {

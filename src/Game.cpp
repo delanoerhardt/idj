@@ -76,11 +76,13 @@ SDL_Renderer *Game::GetRenderer() { return mRenderer; }
 State &Game::GetState() { return *mState; }
 
 void Game::Run() {
-    mFrameStart = SDL_GetTicks();
-
     uint32_t frameEnd = 0;
 
     mDeltaTime = 30.0;
+
+    mState->Start();
+
+    mFrameStart = SDL_GetTicks();
 
     while (!mState->QuitRequested()) {
         InputManager::Update();

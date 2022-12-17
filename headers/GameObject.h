@@ -10,9 +10,15 @@ class GameObject;
 
 class GameObject {
 public:
-    GameObject() : mIsDead{false} {}
+    GameObject() {}
 
-    GameObject(float x, float y) : mBox{x, y, 0.0, 0.0}, mIsDead{false} {}
+    GameObject(float x, float y) : mBox{x, y, 0.0, 0.0} {}
+
+    GameObject(Rect r) : mBox{r.x, r.y, 0.0, 0.0} {}
+
+    GameObject(Vec2 v) : mBox{v.x, v.y, 0.0, 0.0} {}
+
+    void Start();
 
     void Update(float dt);
 
@@ -34,5 +40,7 @@ public:
 
 private:
     std::vector<Component*> mComponents;
-    bool mIsDead;
+
+    bool mIsDead = false;
+    bool mStarted = false;
 };
