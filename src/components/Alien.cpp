@@ -16,13 +16,15 @@ Alien::Alien(GameObject& gameObject, int minionAmount)
 }
 
 void Alien::Start() {
+    auto alienPtr = Game::GetInstance().GetState().GetObject(&mGameObject);
+
     for (int i = 0; i < mMinionAmount; i++) {
         GameObject* minionObject = new GameObject();
         mMinionArray.push_back(
             Game::GetInstance().GetState().AddObject(minionObject));
 
         minionObject->AddComponent(
-            new Minion(*minionObject, mGameObject, i * M_PI / 2));
+            new Minion(*minionObject, alienPtr, i * M_PI / 2));
     }
 }
 

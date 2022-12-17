@@ -9,7 +9,8 @@
 
 #define CENTER_DISTANCE 160
 
-Minion::Minion(GameObject& gameObject, GameObject& alienObject, float angle)
+Minion::Minion(GameObject& gameObject, std::weak_ptr<GameObject> alienObject,
+               float angle)
     : Component{gameObject}, mAlienObject{alienObject}, mAngle{angle} {
     mSprite = new Sprite(gameObject, "assets/img/minion.png");
 
@@ -18,16 +19,30 @@ Minion::Minion(GameObject& gameObject, GameObject& alienObject, float angle)
 
     gameObject.AddComponent(mSprite);
 
-    mGameObject.mBox.SetCenterTo(mAlienObject.mBox.Center() +
+    auto alienPtr = mAlienObject.lock();
+
+    if (!alienPtr) {
+        mGameObject.RequestDelete();
+        return;
+    }
+
+    mGameObject.mBox.SetCenterTo(alienPtr->mBox.Center() +
                                  Vec2{CENTER_DISTANCE, 0}.Rotate(mAngle));
 }
 
 void Minion::Update(float dt) {
+    auto alienPtr = mAlienObject.lock();
+
+    if (!alienPtr) {
+        mGameObject.RequestDelete();
+        return;
+    }
+
     mAngle += dt * ANGULAR_SPEED;
 
     mSprite->mAngleDeg = (mAngle + M_PI / 2) * RAD2DEG;
 
-    mGameObject.mBox.SetCenterTo(mAlienObject.mBox.Center() +
+    mGameObject.mBox.SetCenterTo(alienPtr->mBox.Center() +
                                  Vec2{CENTER_DISTANCE, 0}.Rotate(mAngle));
 }
 
@@ -35,7 +50,7 @@ void Minion::Shoot(Vec2 target) {
     GameObject* bulletObject = new GameObject(mGameObject.mBox.Center());
 
     Bullet* bulletComponent =
-        new Bullet(*bulletObject, target, BULLET_SPEED, 10, BULLET_SPEED * 500,
+        new Bullet(*bulletObject, target, BULLET_SPEED, 10, BULLET_SPEED * 50,
                    "assets/img/minionbullet1.png");
 
     bulletObject->AddComponent(bulletComponent);

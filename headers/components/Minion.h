@@ -7,7 +7,7 @@
 
 class Minion : public Component {
 public:
-    Minion(GameObject& gameObject, GameObject& alienObject,
+    Minion(GameObject& gameObject, std::weak_ptr<GameObject> alienObject,
            float arcOffsetDeg = 0);
 
     void Shoot(Vec2 target);
@@ -17,7 +17,7 @@ public:
     virtual bool Is(std::string type) { return type == "Minion"; }
 
 private:
-    GameObject& mAlienObject;
+    std::weak_ptr<GameObject> mAlienObject;
     float mAngle;
 
     Sprite* mSprite;
