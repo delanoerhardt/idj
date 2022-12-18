@@ -3,9 +3,11 @@
 #include "components/Sprite.h"
 
 Bullet::Bullet(GameObject& gameObject, float angle, float speed, int damage,
-               float maxDistance, std::string spriteFilePath)
+               float maxDistance, std::string spriteFilePath, float frameCount,
+               float frameTime)
     : Component{gameObject}, mDamage{damage}, mDistanceLeft{maxDistance} {
-    Sprite* sprite = new Sprite(gameObject, spriteFilePath);
+    Sprite* sprite =
+        new Sprite(gameObject, spriteFilePath, frameCount, frameTime);
 
     sprite->mAngleDeg = angle;
 
@@ -15,9 +17,11 @@ Bullet::Bullet(GameObject& gameObject, float angle, float speed, int damage,
 }
 
 Bullet::Bullet(GameObject& gameObject, Vec2 destination, float speed,
-               int damage, float maxDistance, std::string spriteFilePath)
+               int damage, float maxDistance, std::string spriteFilePath,
+               float frameCount, float frameTime)
     : Component{gameObject}, mDamage{damage}, mDistanceLeft{maxDistance} {
-    Sprite* sprite = new Sprite(gameObject, spriteFilePath);
+    Sprite* sprite =
+        new Sprite(gameObject, spriteFilePath, frameCount, frameTime);
 
     sprite->mAngleDeg =
         destination.AngleBetween(mGameObject.mBox.Center()) * RAD2DEG;

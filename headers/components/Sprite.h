@@ -9,9 +9,10 @@
 
 class Sprite : public Component {
 public:
-    Sprite(GameObject& gameObject);
+    Sprite(GameObject& gameObject, int frameCount = 1, float frameTime = 1);
 
-    Sprite(GameObject& gameObject, std::string file);
+    Sprite(GameObject& gameObject, std::string file, int frameCount = 1,
+           float frameTime = 1);
 
     void Open(std::string file);
 
@@ -21,6 +22,14 @@ public:
 
     Vec2 GetScale();
 
+    void SetFrame(int frame);
+
+    void SetFrameCount(int frameCount);
+
+    void SetFrameTime(float frameTime);
+
+    virtual void Update(float dt);
+
     virtual void Render();
 
     virtual bool Is(std::string type) { return type == "Sprite"; }
@@ -29,7 +38,7 @@ public:
 
     virtual ~Sprite();
 
-    float GetWidth() { return mTexture.width * mScale.x; }
+    float GetWidth() { return (mTexture.width * mScale.x) / mFrameCount; }
 
     float GetHeight() { return mTexture.height * mScale.y; }
 
@@ -39,5 +48,14 @@ public:
 
 private:
     Vec2 mScale;
+
     SDL_Rect mClipRect;
+
+    int mFrameCount;
+
+    int mCurrentFrame = 0;
+
+    float mTimeElapsed = 0;
+
+    float mFrameTime;
 };

@@ -4,17 +4,23 @@
 #include "Game.h"
 #include "resources/Resources.h"
 
-Sprite::Sprite(GameObject& gameObject)
-    : Component{gameObject}, mTexture{nullptr, 0, 0}, mScale{1, 1} {}
+Sprite::Sprite(GameObject& gameObject, int frameCount, float frameTime)
+    : Component{gameObject},
+      mTexture{nullptr, 0, 0},
+      mScale{1, 1},
+      mFrameCount{frameCount},
+      mFrameTime{frameTime} {}
 
-Sprite::Sprite(GameObject& gameObject, std::string file) : Sprite{gameObject} {
+Sprite::Sprite(GameObject& gameObject, std::string file, int frameCount,
+               float frameTime)
+    : Sprite{gameObject, frameCount, frameTime} {
     Open(file);
 }
 
 void Sprite::Open(std::string file) {
     mTexture = Resources::GetImage(file);
 
-    SetClip(0, 0, mTexture.width, mTexture.height);
+    SetClip(0, 0, mTexture.width / mFrameCount, mTexture.height);
 
     mGameObject.mBox.w = GetWidth();
     mGameObject.mBox.h = GetHeight();
@@ -37,6 +43,28 @@ void Sprite::SetScale(float scaleX, float scaleY) {
 }
 
 Vec2 Sprite::GetScale() { return Vec2{mScale}; }
+
+void Sprite::SetFrame(int frame) {
+    mCurrentFrame = frame;
+    mClipRect.x = mCurrentFrame * (mTexture.width / mFrameCount);
+}
+
+void Sprite::SetFrameCount(int frameCount) {
+    mFrameCount = frameCount;
+    mClipRect.w = mTexture.width / mFrameCount;
+    SetFrame(0);
+}
+
+void Sprite::SetFrameTime(float frameTime) { mFrameTime = frameTime; }
+
+void Sprite::Update(float dt) {
+    mTimeElapsed += dt;
+
+    if (mTimeElapsed > mFrameTime) {
+        mTimeElapsed -= mFrameTime;
+        SetFrame((mCurrentFrame + 1) % mFrameCount);
+    }
+}
 
 void Sprite::Render() {
     if (mTexture.sdlTexture == nullptr) {

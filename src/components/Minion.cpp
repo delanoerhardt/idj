@@ -51,7 +51,7 @@ void Minion::Shoot(Vec2 target) {
 
     Bullet* bulletComponent =
         new Bullet(*bulletObject, target, BULLET_SPEED, 10, BULLET_SPEED * 50,
-                   "assets/img/minionbullet1.png");
+                   "assets/img/minionbullet2.png", 3, 0.1);
 
     bulletObject->AddComponent(bulletComponent);
 
