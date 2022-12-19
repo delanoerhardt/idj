@@ -28,6 +28,13 @@ public:
 
     void SetFrameTime(float frameTime);
 
+    Sprite* SetLifespan(float lifespan) {
+        mLifespan = lifespan;
+        mLimitedLifespan = true;
+
+        return this;
+    }
+
     virtual void Update(float dt);
 
     virtual void Render();
@@ -44,8 +51,6 @@ public:
 
     Texture mTexture;
 
-    float mAngleDeg = 0;
-
 private:
     Vec2 mScale;
 
@@ -58,4 +63,8 @@ private:
     float mTimeElapsed = 0;
 
     float mFrameTime;
+
+    float mLifespan;
+
+    bool mLimitedLifespan = false;
 };

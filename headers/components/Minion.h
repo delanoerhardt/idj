@@ -19,6 +19,4 @@ public:
 private:
     std::weak_ptr<GameObject> mAlienObject;
     float mAngle;
-
-    Sprite* mSprite;
 };

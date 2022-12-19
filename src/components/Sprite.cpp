@@ -37,9 +37,12 @@ void Sprite::SetScale(float scaleX, float scaleY) {
     int xSizeDiff = xScaleDiff * mTexture.width;
     int ySizeDiff = yScaleDiff * mTexture.height;
 
-    mGameObject.mBox -= Vec2(xSizeDiff, ySizeDiff) / 2;
-
     mScale = Vec2(scaleX, scaleY);
+
+    mGameObject.mBox.x -= xSizeDiff / 2;
+    mGameObject.mBox.x -= ySizeDiff / 2;
+    mGameObject.mBox.w = GetWidth();
+    mGameObject.mBox.h = GetHeight();
 }
 
 Vec2 Sprite::GetScale() { return Vec2{mScale}; }
@@ -58,6 +61,14 @@ void Sprite::SetFrameCount(int frameCount) {
 void Sprite::SetFrameTime(float frameTime) { mFrameTime = frameTime; }
 
 void Sprite::Update(float dt) {
+    if (mLimitedLifespan) {
+        mLifespan -= dt;
+        if (mLifespan <= 0) {
+            mGameObject.RequestDelete();
+            return;
+        }
+    }
+
     mTimeElapsed += dt;
 
     if (mTimeElapsed > mFrameTime) {
@@ -75,10 +86,11 @@ void Sprite::Render() {
 
     Rect rect = mGameObject.mBox - cameraPos;
 
-    SDL_Rect target = rect.Scale(mScale.x, mScale.y).toSDL();
+    SDL_Rect target = rect.toSDL();
 
     SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), mTexture.sdlTexture,
-                     &mClipRect, &target, mAngleDeg, NULL, SDL_FLIP_NONE);
+                     &mClipRect, &target, mGameObject.mAngle * RAD2DEG, NULL,
+                     SDL_FLIP_NONE);
 }
 
 bool Sprite::IsOpen() { return mTexture.sdlTexture != nullptr; }

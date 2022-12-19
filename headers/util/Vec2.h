@@ -23,15 +23,13 @@ public:
 
     Vec2(uint32_t x, uint32_t y) : x{(float)x}, y{(float)y} {}
 
-    Vec2 &Rotate(float angle) {
+    Vec2 Rotate(float angle) {
         float cosAngle = cos(angle), sinAngle = sin(angle);
 
         float x1 = x * cosAngle - y * sinAngle;
         float y1 = x * sinAngle + y * cosAngle;
 
-        this->x = x1;
-        this->y = y1;
-        return *this;
+        return Vec2{x1, y1};
     }
 
     float Length() { return sqrt(x * x + y * y); }

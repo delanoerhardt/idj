@@ -18,6 +18,12 @@ public:
 
     GameObject(Vec2 v) : mBox{v.x, v.y, 0.0, 0.0} {}
 
+    GameObject* CenterAt(Vec2 v) {
+        mBox.x = v.x - mBox.w / 2;
+        mBox.y = v.y - mBox.h / 2;
+        return this;
+    }
+
     void Start();
 
     void Update(float dt);
@@ -32,11 +38,15 @@ public:
 
     void RemoveComponent(Component* cpt);
 
+    void NotifyCollision(GameObject& other);
+
     Component* GetComponent(std::string type);
 
     ~GameObject();
 
     Rect mBox;
+
+    float mAngle = 0;
 
 private:
     std::vector<Component*> mComponents;

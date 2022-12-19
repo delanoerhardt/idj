@@ -4,7 +4,9 @@
 #include <queue>
 
 #include "Component.h"
+#include "PenguinBody.h"
 #include "Sprite.h"
+#include "Timer.h"
 
 class Alien : public Component {
 public:
@@ -14,33 +16,37 @@ public:
 
     virtual void Update(float dt);
 
+    virtual void NotifyCollision(GameObject& other);
+
     virtual bool Is(std::string type) { return type == "Alien"; }
 
+    static int alienCount;
+
+    ~Alien() { alienCount--; }
+
 private:
-    class Action;
+    void CreateExplosion();
 
     Vec2 mSpeed;
     int mHp;
 
     int mMinionAmount;
 
-    Sprite* mSprite;
-
-    std::queue<Alien::Action> mTaskQueue;
     std::vector<std::weak_ptr<GameObject>> mMinionArray;
-};
 
-class Alien::Action {
-public:
-    enum Type { MOVE, SHOOT };
+    enum State { MOVING, RESTING };
 
-    Action(Type type, float x, float y) : mType{type}, mPos{x, y} {}
+    State mState;
 
-    Action(Type type, int x, int y) : mType{type}, mPos{x, y} {}
+    Timer mRestTimer;
 
-    Action(Type type, Vec2 pos) : mType{type}, mPos{pos} {}
+    Vec2 mDestination;
 
-    Type mType;
+    Vec2 GetPlayerPosition() {
+        if (PenguinBody::sPlayer) {
+            return PenguinBody::sPlayer->mGameObject.mBox.Center();
+        }
 
-    Vec2 mPos;
+        return mGameObject.mBox.Center();
+    }
 };

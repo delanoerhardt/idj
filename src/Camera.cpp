@@ -14,8 +14,7 @@ void Camera::Unfollow() { sFocus = nullptr; }
 
 void Camera::Update(float dt) {
     if (sFocus != nullptr) {
-        sPos.x = sFocus->mBox.x;
-        sPos.y = sFocus->mBox.y;
+        sPos = sFocus->mBox.Center() - Vec2(WINDOW_WIDTH, WINDOW_HEIGHT) / 2;
 
         return;
     }

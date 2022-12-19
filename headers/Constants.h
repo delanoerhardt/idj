@@ -7,6 +7,6 @@
 
 #define CAMERA_SPEED 125
 
-#define GAME_VOLUME 0
+#define GAME_VOLUME 2
 
 #define PARALLAX_SPEED 0.7

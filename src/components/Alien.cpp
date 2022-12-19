@@ -2,17 +2,35 @@
 
 #include "Camera.h"
 #include "Game.h"
+#include "components/Bullet.h"
+#include "components/Collider.h"
 #include "components/Minion.h"
+#include "components/Sound.h"
 #include "resources/InputManager.h"
 
 #define ALIEN_SPEED 250
 #define ALIEN_MIN_DISTANCE_TARGET 2
 
-Alien::Alien(GameObject& gameObject, int minionAmount)
-    : Component{gameObject}, mSpeed{}, mHp{30}, mMinionAmount{minionAmount} {
-    mSprite = new Sprite{gameObject, "assets/img/alien.png"};
+#define MOVE_COOLDOWN 2
 
-    gameObject.AddComponent(mSprite);
+int Alien::alienCount = 0;
+
+Alien::Alien(GameObject& gameObject, int minionAmount)
+    : Component{gameObject},
+      mSpeed{},
+      mHp{30},
+      mMinionAmount{minionAmount},
+      mState{Alien::State::MOVING},
+      mDestination{GetPlayerPosition()} {
+    Sprite* sprite = new Sprite{gameObject, "assets/img/alien.png"};
+
+    gameObject.AddComponent(sprite);
+
+    Collider* collider = new Collider(gameObject);
+
+    mGameObject.AddComponent(collider);
+
+    alienCount++;
 }
 
 void Alien::Start() {
@@ -29,48 +47,69 @@ void Alien::Start() {
 }
 
 void Alien::Update(float dt) {
-    mSprite->mAngleDeg -= 0.4;
+    if (mHp <= 0) {
+        mGameObject.RequestDelete();
 
-    if (InputManager::ButtonPressed(SDL_BUTTON_LEFT)) {
-        Vec2 actionPos = InputManager::GetMousePos() + Camera::sPos;
-        Alien::Action action{Alien::Action::Type::SHOOT, actionPos};
+        CreateExplosion();
 
-        mTaskQueue.push(action);
-    }
-
-    if (InputManager::ButtonPressed(SDL_BUTTON_RIGHT)) {
-        Vec2 actionPos = InputManager::GetMousePos() + Camera::sPos;
-        Alien::Action action{Alien::Action::Type::MOVE, actionPos};
-
-        mTaskQueue.push(action);
-    }
-
-    if (mTaskQueue.empty()) {
         return;
     }
 
-    Alien::Action& action = mTaskQueue.front();
+    mGameObject.mAngle -= 0.007;
 
-    if (action.mType == Alien::Action::Type::MOVE) {
-        Vec2 movementDirection = action.mPos - mGameObject.mBox.Center();
+    if (mState == Alien::State::MOVING) {
+        Vec2 movementDirection = mDestination - mGameObject.mBox.Center();
 
         mGameObject.mBox += movementDirection.Normalized() * (ALIEN_SPEED * dt);
 
-        Vec2 newMovementDirection = action.mPos - mGameObject.mBox.Center();
+        Vec2 newMovementDirection = mDestination - mGameObject.mBox.Center();
 
         if (movementDirection.DotProduct(newMovementDirection) <= 0) {
-            mGameObject.mBox.SetCenterTo(action.mPos);
-            mTaskQueue.pop();
-        }
-    } else if (action.mType == Alien::Action::Type::SHOOT &&
-               mMinionArray.size() > 0) {
-        auto l = mMinionArray[rand() % mMinionArray.size()].lock();
+            mGameObject.mBox.SetCenterTo(mDestination);
 
-        if (l) {
-            Minion* minion = (Minion*)l->GetComponent("Minion");
-            minion->Shoot(action.mPos);
-        }
+            auto l = mMinionArray[rand() % mMinionArray.size()].lock();
 
-        mTaskQueue.pop();
+            if (l) {
+                Minion* minion = (Minion*)l->GetComponent("Minion");
+                minion->Shoot(GetPlayerPosition());
+            }
+
+            mState = Alien::State::RESTING;
+            mRestTimer.Restart();
+        }
+    } else if (mState == Alien::State::RESTING) {
+        mRestTimer.Update(dt);
+
+        if (mRestTimer.Get() >= MOVE_COOLDOWN) {
+            mDestination = GetPlayerPosition();
+            mState = Alien::State::MOVING;
+        }
     }
+}
+
+void Alien::NotifyCollision(GameObject& other) {
+    Bullet* bullet = (Bullet*)other.GetComponent("Bullet");
+
+    if (bullet && !bullet->mTargetsPlayer) {
+        mHp -= bullet->mDamage;
+    }
+}
+
+void Alien::CreateExplosion() {
+    GameObject* explosionObject = new GameObject();
+
+    Sprite* sprite =
+        new Sprite{*explosionObject, "assets/img/aliendeath.png", 4, 0.2};
+
+    sprite->SetLifespan(0.8);
+
+    explosionObject->CenterAt(mGameObject.mBox.Center());
+    explosionObject->AddComponent(sprite);
+
+    Sound* sound = new Sound{*explosionObject, "assets/audio/boom.wav"};
+    sound->Play();
+
+    explosionObject->AddComponent(sound);
+
+    Game::GetInstance().GetState().AddObject(explosionObject);
 }

@@ -16,6 +16,8 @@ public:
 
     virtual void Render() {}
 
+    virtual void NotifyCollision(GameObject& other) {}
+
     virtual bool Is(std::string type) = 0;
 
     virtual ~Component() {}

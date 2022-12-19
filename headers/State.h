@@ -30,6 +30,8 @@ public:
     ~State();
 
 private:
+    void CheckCollisions();
+
     t_objects mObjects;
 
     Music mMusic;

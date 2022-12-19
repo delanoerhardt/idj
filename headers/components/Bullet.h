@@ -12,11 +12,20 @@ public:
            float maxDistance, std::string spriteFilePath, float frameCount = 1,
            float frameTime = 1);
 
+    Bullet* SetTargetsPlayer(bool targetsPlayer) {
+        mTargetsPlayer = targetsPlayer;
+        return this;
+    }
+
     virtual void Update(float dt);
+
+    virtual void NotifyCollision(GameObject& other);
 
     virtual bool Is(std::string type) { return type == "Bullet"; };
 
     int mDamage;
+
+    bool mTargetsPlayer = false;
 
 private:
     Vec2 mSpeed;

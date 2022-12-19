@@ -5,10 +5,13 @@
 #include "Camera.h"
 #include "components/Alien.h"
 #include "components/CameraFollower.h"
+#include "components/Collider.h"
+#include "components/PenguinBody.h"
 #include "components/Sound.h"
 #include "components/TileMap.h"
 #include "resources/InputManager.h"
 #include "resources/TileSet.h"
+#include "util/CollisionDetection.h"
 #include "util/Vec2.h"
 
 TileMap* tileMap;
@@ -37,6 +40,13 @@ State::State() : mObjects{}, mMusic{"assets/audio/stageState.ogg"} {
 
     mObjects.emplace_back(alienObject);
 
+    GameObject* penguinObject = new GameObject(704, 640);
+    penguinObject->AddComponent(new PenguinBody(*penguinObject));
+
+    mObjects.emplace_back(penguinObject);
+
+    Camera::Follow(penguinObject);
+
     mMusic.Play();
 }
 
@@ -57,9 +67,13 @@ void State::Start() {
 void State::Update(float dt) {
     Camera::Update(dt);
 
-    for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Update(dt);
+    }
 
+    CheckCollisions();
+
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
         if (mObjects[i]->IsDead()) {
             mObjects.erase(mObjects.begin() + i);
         }
@@ -72,7 +86,7 @@ void State::Update(float dt) {
 }
 
 void State::Render() {
-    for (t_objects::size_type i = 0; i < mObjects.size(); i++) {
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
         mObjects[i]->Render();
     }
 }
@@ -87,9 +101,9 @@ std::weak_ptr<GameObject> State::AddObject(GameObject* gameObject) {
 }
 
 std::weak_ptr<GameObject> State::GetObject(GameObject* gameObject) {
-    for (auto it = mObjects.begin(); it != mObjects.end(); it++) {
-        if (it->get() == gameObject) {
-            return std::weak_ptr(*it);
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
+        if (mObjects[i].get() == gameObject) {
+            return std::weak_ptr(mObjects[i]);
         }
     }
 
@@ -97,3 +111,36 @@ std::weak_ptr<GameObject> State::GetObject(GameObject* gameObject) {
 }
 
 State::~State() { mObjects.clear(); }
+
+void State::CheckCollisions() {
+    Collider *collider1, *collider2;
+
+    for (uint64_t i = 0; i < mObjects.size(); i++) {
+        if (mObjects[i]->IsDead()) continue;
+
+        collider1 = (Collider*)mObjects[i]->GetComponent("Collider");
+
+        if (collider1 == nullptr) {
+            continue;
+        }
+
+        for (uint64_t j = i + 1; j < mObjects.size(); j++) {
+            if (mObjects[j]->IsDead()) continue;
+
+            collider2 = (Collider*)mObjects[j]->GetComponent("Collider");
+
+            if (collider2 == nullptr) {
+                continue;
+            }
+
+            bool collided = CollisionDetection::IsColliding(
+                collider1->mBox, collider2->mBox, collider1->mGameObject.mAngle,
+                collider2->mGameObject.mAngle);
+
+            if (collided) {
+                collider1->mGameObject.NotifyCollision(collider2->mGameObject);
+                collider2->mGameObject.NotifyCollision(collider1->mGameObject);
+            }
+        }
+    }
+}

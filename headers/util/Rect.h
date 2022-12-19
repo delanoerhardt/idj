@@ -59,6 +59,13 @@ public:
         return Rect{x, y, w * scaleX, h * scaleY};
     }
 
+    Rect Scale(Vec2 &scale) { return Rect{x, y, w * scale.x, h * scale.y}; }
+
+    Rect ScaleCentered(Vec2 &scale) {
+        return Rect{x + w / 2 * (1 - scale.x), y + h / 2 * (1 - scale.y),
+                    w * scale.x, h * scale.y};
+    }
+
     Rect operator+=(const Rect &rhs) {
         x += rhs.x;
         y += rhs.y;
