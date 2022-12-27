@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 #define INCLUDE_SDL
 #define INCLUDE_SDL_TTF
@@ -22,7 +23,7 @@ public:
     float mDeltaTime;
 
 private:
-    Game(std::string title, u_int32_t width, u_int32_t height);
+    Game(std::string title, uint32_t width, uint32_t height);
 
     static Game *sInstance;
 

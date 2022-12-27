@@ -9,7 +9,7 @@
 
 Game *Game::sInstance;
 
-Game::Game(std::string title, u_int32_t width, u_int32_t height) {
+Game::Game(std::string title, uint32_t width, uint32_t height) {
     if (sInstance != nullptr) {
         printf("Invalid call to Game constructor");
         exit(1);

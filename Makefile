@@ -25,11 +25,11 @@ BIN         = $(DEST)$(SEP)game.exe
 
 
 GPP         = g++
-GPP_INC     = -I/usr/include/SDL2 -Iheaders
+GPP_INC     = -Iheaders
 GPP_WARNS   = -Wall -Wextra -Wno-unused
 GPP_LIBS    = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
-GPP_FLAGS   = $(GPP_INC) $(GPP_WARNS) $(GPP_LIBS)
+GPP_FLAGS   = -std=c++11 $(GPP_INC) $(GPP_WARNS) $(GPP_LIBS)
 
 LOG_DIR     = $(DEST)$(SEP)logs
 RUN_FLAGS   = 
@@ -43,11 +43,21 @@ ifeq ($(OS),Windows_NT)
 MKDIRS    = md $(DEST) $(DIR) $(LOG_DIR) > nul 2> nul & @
 RMDIRS    = rd /S/Q $(DEST) > nul 2> nul & @
 
+SDL_PATH = C:\SDL2
+
+GPP_INC += -I $(SDL_PATH)\include
+
+GPP_LIBS = -L $(SDL_PATH)\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
+
+COPY_DLLS = xcopy /S /Y .\assets\windows-dlls target\ > nul 2> nul & @
+
 else
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S), Darwin)
-LIBS = -lm -framework SDL2 -framework SDL2_image -framework SDL2_mixer -framework SDL2_ttf
+GPP_LIBS = -lm -framework SDL2 -framework SDL2_image -framework SDL2_mixer -framework SDL2_ttf
+else 
+GPP_INC += -I/usr/include/SDL2
 endif
 endif
 
@@ -58,7 +68,7 @@ all: all-before $(BIN)
 
 all-before:
 	$(MKDIRS)
-
+	$(COPY_DLLS)
 
 clean:
 	$(RMDIRS)

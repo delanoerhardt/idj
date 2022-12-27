@@ -92,18 +92,20 @@ void State::Render() {
 }
 
 std::weak_ptr<GameObject> State::AddObject(GameObject* gameObject) {
+    mObjects.emplace_back(gameObject);
+
     std::shared_ptr<GameObject>& objectSharedPointer =
-        mObjects.emplace_back(gameObject);
+        mObjects[mObjects.size() - 1];
 
     if (mStarted) gameObject->Start();
 
-    return std::weak_ptr(objectSharedPointer);
+    return std::weak_ptr<GameObject>(objectSharedPointer);
 }
 
 std::weak_ptr<GameObject> State::GetObject(GameObject* gameObject) {
     for (uint64_t i = 0; i < mObjects.size(); i++) {
         if (mObjects[i].get() == gameObject) {
-            return std::weak_ptr(mObjects[i]);
+            return std::weak_ptr<GameObject>(mObjects[i]);
         }
     }
 
