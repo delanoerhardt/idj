@@ -2,6 +2,8 @@
 
 #include <cstdio>
 
-#define LOG(X) printf("%s\n", (X))
+#define LOGLINE() printf("[%s:%d]\n", __FILE__, __LINE__)
 
-#define LOGI(X) printf("%d\n", (X))
+#define LOG(X) printf("[%s:%d] %s\n", __FILE__, __LINE__, (X))
+
+#define LOGI(X) printf("[%s:%d] %d\n", __FILE__, __LINE__, (X))
