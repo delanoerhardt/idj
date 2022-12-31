@@ -21,10 +21,6 @@ public:
 
     bool IsOpen();
 
-    virtual void Update(float dt);
-
-    virtual void Render();
-
     virtual bool Is(std::string type);
 
     virtual ~Sound();

@@ -19,8 +19,6 @@ public:
 
     bool IsOpen();
 
-    ~Music();
-
 private:
     Mix_Music *mMusic;
 };

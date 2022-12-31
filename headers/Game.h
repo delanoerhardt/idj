@@ -29,27 +29,7 @@ public:
 private:
     Game(std::string title, uint32_t width, uint32_t height);
 
-    void PushStored() {
-        LOGLINE();
-        if (mStoredState == nullptr) {
-            return;
-        }
-        LOGLINE();
-
-        if (!mStateStack.empty()) {
-            LOGLINE();
-            mStateStack.top()->Pause();
-            LOGLINE();
-        }
-
-        mStateStack.emplace(mStoredState);
-        LOGLINE();
-        mStateStack.top()->Start();
-        LOGLINE();
-
-        mStoredState = nullptr;
-        LOGLINE();
-    }
+    void PushStored();
 
     static Game *sInstance;
 

@@ -17,7 +17,7 @@ public:
 
     virtual void Pause();
 
-    virtual ~StageState() { LOGLINE(); }
+    virtual ~StageState() {}
 
 private:
     void CheckCollisions();

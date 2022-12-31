@@ -13,8 +13,6 @@ public:
 
     inline int& At(int x, int y, int z = 0);
 
-    virtual void Update(float dt);
-
     virtual void Render();
 
     virtual bool Is(std::string type);

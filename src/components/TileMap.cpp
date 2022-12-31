@@ -48,8 +48,6 @@ int& TileMap::At(int x, int y, int z) {
     return mTileMatrix[z * mMapFloorSize + y * mMapWidth + x];
 }
 
-void TileMap::Update(float dt) {}
-
 void TileMap::Render() {
     float cameraX = Camera::sPos.x, cameraY = Camera::sPos.y;
 

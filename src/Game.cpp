@@ -90,40 +90,28 @@ void Game::Run() {
     mFrameStart = SDL_GetTicks();
 
     while (!mStateStack.empty() && !mStateStack.top()->QuitRequested()) {
-        LOGLINE();
         InputManager::Update();
-        LOGLINE();
 
         if (mStateStack.top()->PopRequested()) {
-            LOGLINE();
-
             mStateStack.pop();
-            LOGLINE();
 
             if (!mStateStack.empty()) {
-                LOGLINE();
                 mStateStack.top()->Resume();
-                LOGLINE();
+
             } else if (mStoredState == nullptr) {
                 break;
             }
         }
-        LOGLINE();
 
         PushStored();
 
-        LOGLINE();
-
         mStateStack.top()->Update(mDeltaTime);
-        LOGLINE();
 
         mStateStack.top()->Render();
-        LOGLINE();
+
         SDL_RenderPresent(mRenderer);
-        LOGLINE();
 
         SDL_Delay(30);
-        LOGLINE();
 
         frameEnd = SDL_GetTicks();
 
@@ -131,6 +119,22 @@ void Game::Run() {
 
         mFrameStart = frameEnd;
     }
+}
+
+void Game::PushStored() {
+    if (mStoredState == nullptr) {
+        return;
+    }
+
+    if (!mStateStack.empty()) {
+        mStateStack.top()->Pause();
+    }
+
+    mStateStack.emplace(mStoredState);
+
+    mStateStack.top()->Start();
+
+    mStoredState = nullptr;
 }
 
 Game::~Game() {

@@ -19,5 +19,3 @@ void Music::Play(int times) {
 void Music::Stop(int msToStop) { Mix_FadeOutMusic(msToStop); }
 
 bool Music::IsOpen() { return mMusic != nullptr; }
-
-Music::~Music() { Mix_FreeMusic(mMusic); }

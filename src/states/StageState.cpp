@@ -63,33 +63,25 @@ StageState::StageState() : State{}, mMusic{"assets/audio/stageState.ogg"} {
 }
 
 void StageState::Update(float dt) {
-    LOGLINE();
     Camera::Update(dt);
 
-    LOGLINE();
     UpdateArray(dt);
-    LOGLINE();
 
     CheckCollisions();
-    LOGLINE();
 
     UpdateDeadArray();
-    LOGLINE();
 
     if (InputManager::QuitRequested() ||
         InputManager::KeyPressed(SDLK_ESCAPE)) {
-        LOGLINE();
         mPopRequested = true;
     }
 
     if (Alien::alienCount <= 0) {
-        LOGLINE();
         GameData::playerVictory = true;
 
         mPopRequested = true;
         Game::Push(new EndState());
     } else if (mPenguinPtr->IsDead()) {
-        LOGLINE();
         GameData::playerVictory = false;
 
         mPopRequested = true;

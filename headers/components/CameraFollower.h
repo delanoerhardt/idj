@@ -13,7 +13,5 @@ public:
         mGameObject.mBox.y = cameraPosition.y;
     }
 
-    virtual void Render() {}
-
     virtual bool Is(std::string type) { return type == "CameraFollower"; }
 };
