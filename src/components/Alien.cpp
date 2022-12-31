@@ -11,7 +11,7 @@
 #define ALIEN_SPEED 250
 #define ALIEN_MIN_DISTANCE_TARGET 2
 
-#define MOVE_COOLDOWN 2
+#define MOVE_COOLDOWN 3
 
 int Alien::alienCount = 0;
 
@@ -20,7 +20,7 @@ Alien::Alien(GameObject& gameObject, int minionAmount)
       mSpeed{},
       mHp{30},
       mMinionAmount{minionAmount},
-      mState{Alien::State::MOVING},
+      mState{Alien::State::RESTING},
       mDestination{GetPlayerPosition()} {
     Sprite* sprite = new Sprite{gameObject, "assets/img/alien.png"};
 
@@ -30,19 +30,22 @@ Alien::Alien(GameObject& gameObject, int minionAmount)
 
     mGameObject.AddComponent(collider);
 
+    mRestTimer.Update((rand() % (MOVE_COOLDOWN * 1000)) / 1000.0);
+
     alienCount++;
 }
 
 void Alien::Start() {
-    auto alienPtr = Game::GetInstance().GetState().GetObject(&mGameObject);
+    auto alienPtr = Game::GetCurrentState().GetObject(&mGameObject);
+
+    float arcAngle = (M_PI * 2) / mMinionAmount;
 
     for (int i = 0; i < mMinionAmount; i++) {
         GameObject* minionObject = new GameObject();
-        mMinionArray.push_back(
-            Game::GetInstance().GetState().AddObject(minionObject));
+        mMinionArray.push_back(Game::GetCurrentState().AddObject(minionObject));
 
         minionObject->AddComponent(
-            new Minion(*minionObject, alienPtr, i * M_PI / 2));
+            new Minion(*minionObject, alienPtr, i * arcAngle));
     }
 }
 
@@ -111,5 +114,5 @@ void Alien::CreateExplosion() {
 
     explosionObject->AddComponent(sound);
 
-    Game::GetInstance().GetState().AddObject(explosionObject);
+    Game::GetCurrentState().AddObject(explosionObject);
 }

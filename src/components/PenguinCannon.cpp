@@ -67,7 +67,7 @@ void PenguinCannon::Shoot() {
 
     bulletObject->AddComponent(bulletComponent);
 
-    Game::GetInstance().GetState().AddObject(bulletObject);
+    Game::GetCurrentState().AddObject(bulletObject);
 
     mCannonCooldown.Restart();
 }

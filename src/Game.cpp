@@ -6,10 +6,13 @@
 #include "Constants.h"
 #include "resources/InputManager.h"
 #include "resources/Resources.h"
+#include "states/TitleState.h"
+#include "util/Logger.h"
 
 Game *Game::sInstance;
 
-Game::Game(std::string title, u_int32_t width, u_int32_t height) {
+Game::Game(std::string title, u_int32_t width, u_int32_t height)
+    : mStoredState{nullptr} {
     if (sInstance != nullptr) {
         printf("Invalid call to Game constructor");
         exit(1);
@@ -58,7 +61,13 @@ Game::Game(std::string title, u_int32_t width, u_int32_t height) {
         exit(1);
     }
 
-    mState = new State();
+    int ttfInitError = TTF_Init();
+    if (ttfInitError) {
+        printf("Failed to init TTF");
+        exit(1);
+    }
+
+    mStoredState = new TitleState();
 
     srand(time(NULL));
 }
@@ -71,25 +80,33 @@ Game &Game::GetInstance() {
     return *sInstance;
 }
 
-SDL_Renderer *Game::GetRenderer() { return mRenderer; }
-
-State &Game::GetState() { return *mState; }
-
 void Game::Run() {
     uint32_t frameEnd = 0;
 
     mDeltaTime = 30.0;
 
-    mState->Start();
+    PushStored();
 
     mFrameStart = SDL_GetTicks();
 
-    while (!mState->QuitRequested()) {
+    while (!mStateStack.empty() && !mStateStack.top()->QuitRequested()) {
         InputManager::Update();
 
-        mState->Update(mDeltaTime);
+        if (mStateStack.top()->PopRequested()) {
+            mStateStack.pop();
 
-        mState->Render();
+            if (!mStateStack.empty()) {
+                mStateStack.top()->Resume();
+            } else if (mStoredState == nullptr) {
+                break;
+            }
+        }
+
+        PushStored();
+
+        mStateStack.top()->Update(mDeltaTime);
+
+        mStateStack.top()->Render();
         SDL_RenderPresent(mRenderer);
 
         SDL_Delay(30);
@@ -103,11 +120,13 @@ void Game::Run() {
 }
 
 Game::~Game() {
-    delete mState;
+    if (mStoredState) {
+        delete mStoredState;
+    }
 
-    Resources::ClearImages();
-    Resources::ClearMusics();
-    Resources::ClearSounds();
+    Resources::ClearAll();
+
+    TTF_Quit();
 
     Mix_CloseAudio();
     Mix_Quit();

@@ -61,5 +61,5 @@ void Minion::Shoot(Vec2 target) {
 
     bulletObject->AddComponent(bulletComponent);
 
-    Game::GetInstance().GetState().AddObject(bulletObject);
+    Game::GetCurrentState().AddObject(bulletObject);
 }

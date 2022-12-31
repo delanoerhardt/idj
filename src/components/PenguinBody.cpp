@@ -17,7 +17,7 @@
 PenguinBody* PenguinBody::sPlayer;
 
 PenguinBody::PenguinBody(GameObject& gameObject)
-    : Component{gameObject}, mHp{30} {
+    : Component{gameObject}, mHp{30}, mAngle{0} {
     Sprite* sprite = new Sprite(gameObject, "assets/img/penguin.png");
 
     mGameObject.AddComponent(sprite);
@@ -32,7 +32,7 @@ PenguinBody::PenguinBody(GameObject& gameObject)
 PenguinBody::~PenguinBody() { PenguinBody::sPlayer = nullptr; }
 
 void PenguinBody::Start() {
-    State& state = Game::GetInstance().GetState();
+    State& state = Game::GetCurrentState();
 
     GameObject* penguinObject = new GameObject(mGameObject.mBox.Center());
 
@@ -85,6 +85,8 @@ void PenguinBody::Update(float dt) {
     mGameObject.mAngle = mAngle;
 
     mGameObject.mBox += mSpeed.Rotate(mAngle) * dt;
+
+    mGameObject.mBox.ClipTo(Rect{0, 0, 1408, 1280});
 }
 
 void PenguinBody::NotifyCollision(GameObject& other) {
@@ -111,5 +113,5 @@ void PenguinBody::CreateExplosion() {
 
     explosionObject->AddComponent(sound);
 
-    Game::GetInstance().GetState().AddObject(explosionObject);
+    Game::GetCurrentState().AddObject(explosionObject);
 }
