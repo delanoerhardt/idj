@@ -3,6 +3,7 @@
 std::unordered_map<std::string, Texture> Resources::imageTable;
 std::unordered_map<std::string, Mix_Music*> Resources::musicTable;
 std::unordered_map<std::string, Mix_Chunk*> Resources::soundTable;
+std::unordered_map<std::string, TTF_Font*> Resources::fontTable;
 
 Texture& Resources::GetImage(std::string file) {
     auto it = imageTable.find(file);
@@ -36,7 +37,13 @@ Texture& Resources::GetImage(std::string file) {
     return textureRef;
 }
 
-void Resources::ClearImages() { imageTable.clear(); }
+void Resources::ClearImages() {
+    for (auto&& image : imageTable) {
+        SDL_DestroyTexture(image.second.sdlTexture);
+    }
+
+    imageTable.clear();
+}
 
 Mix_Music* Resources::GetMusic(std::string file) {
     auto it = musicTable.find(file);
@@ -59,7 +66,13 @@ Mix_Music* Resources::GetMusic(std::string file) {
     return music;
 }
 
-void Resources::ClearMusics() { musicTable.clear(); }
+void Resources::ClearMusics() {
+    for (auto&& music : musicTable) {
+        Mix_FreeMusic(music.second);
+    }
+
+    musicTable.clear();
+}
 
 Mix_Chunk* Resources::GetSound(std::string file) {
     auto it = soundTable.find(file);
@@ -82,4 +95,38 @@ Mix_Chunk* Resources::GetSound(std::string file) {
     return chunk;
 }
 
-void Resources::ClearSounds() { soundTable.clear(); }
+void Resources::ClearSounds() {
+    for (auto&& sound : soundTable) {
+        Mix_FreeChunk(sound.second);
+    }
+
+    soundTable.clear();
+}
+
+TTF_Font* Resources::GetFont(std::string file, int ptSize) {
+    std::string uniqueFontName = file + std::to_string(ptSize);
+    auto it = fontTable.find(uniqueFontName);
+
+    if (it != fontTable.end()) {
+        return it->second;
+    }
+
+    TTF_Font* font = TTF_OpenFont(file.c_str(), ptSize);
+
+    if (font == nullptr) {
+        printf("Failed to open font %s due to %s\n", uniqueFontName.c_str(),
+               TTF_GetError());
+
+        exit(1);
+    }
+
+    return fontTable[uniqueFontName] = font;
+}
+
+void Resources::ClearFonts() {
+    for (auto&& font : fontTable) {
+        TTF_CloseFont(font.second);
+    }
+
+    fontTable.clear();
+}

@@ -48,6 +48,18 @@ public:
         y = rhs.y - h / 2;
     }
 
+    void SetCenterTo(float _x, float _y) {
+        x = _x - w / 2;
+        y = _y - h / 2;
+    }
+
+    void SetSize(float width, float height) {
+        w = width;
+        h = height;
+    }
+
+    void ClipTo(Rect rect);
+
     std::string toString() {
         std::stringstream ss;
         ss << "{ x: " << x << ", y: " << y << ", w: " << w << ", h: " << h

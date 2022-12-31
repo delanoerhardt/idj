@@ -1,20 +1,24 @@
 #pragma once
 
+#include <memory>
+#include <stack>
 #include <string>
 #include <cstdint>
 
 #define INCLUDE_SDL
 #define INCLUDE_SDL_TTF
 #include "SDL_include.h"
-#include "State.h"
+#include "states/State.h"
+#include "util/Logger.h"
 
 class Game {
 public:
     static Game &GetInstance();
 
-    SDL_Renderer *GetRenderer();
+    static SDL_Renderer *GetRenderer() { return GetInstance().mRenderer; }
+    static State &GetCurrentState() { return *GetInstance().mStateStack.top(); }
 
-    State &GetState();
+    static void Push(State *state) { GetInstance().mStoredState = state; }
 
     void Run();
 
@@ -25,11 +29,28 @@ public:
 private:
     Game(std::string title, uint32_t width, uint32_t height);
 
+    void PushStored() {
+        if (mStoredState == nullptr) {
+            return;
+        }
+
+        if (!mStateStack.empty()) {
+            mStateStack.top()->Pause();
+        }
+
+        mStateStack.emplace(mStoredState);
+        mStateStack.top()->Start();
+
+        mStoredState = nullptr;
+    }
+
     static Game *sInstance;
 
     uint32_t mFrameStart;
 
     SDL_Window *mWindow;
     SDL_Renderer *mRenderer;
-    State *mState;
+
+    State *mStoredState;
+    std::stack<std::unique_ptr<State>> mStateStack;
 };

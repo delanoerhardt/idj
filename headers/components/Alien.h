@@ -47,6 +47,6 @@ private:
             return PenguinBody::sPlayer->mGameObject.mBox.Center();
         }
 
-        return mGameObject.mBox.Center();
+        return Vec2{rand() % 1000, rand() % 1000};
     }
 };
