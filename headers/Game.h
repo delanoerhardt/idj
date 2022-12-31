@@ -1,9 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <stack>
 #include <string>
-#include <cstdint>
 
 #define INCLUDE_SDL
 #define INCLUDE_SDL_TTF
@@ -30,18 +30,25 @@ private:
     Game(std::string title, uint32_t width, uint32_t height);
 
     void PushStored() {
+        LOGLINE();
         if (mStoredState == nullptr) {
             return;
         }
+        LOGLINE();
 
         if (!mStateStack.empty()) {
+            LOGLINE();
             mStateStack.top()->Pause();
+            LOGLINE();
         }
 
         mStateStack.emplace(mStoredState);
+        LOGLINE();
         mStateStack.top()->Start();
+        LOGLINE();
 
         mStoredState = nullptr;
+        LOGLINE();
     }
 
     static Game *sInstance;

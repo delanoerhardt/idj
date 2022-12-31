@@ -27,7 +27,11 @@ public:
     std::weak_ptr<GameObject> AddObject(GameObject *gameObject);
     std::weak_ptr<GameObject> GetObject(GameObject *gameObject);
 
-    virtual ~State() { mObjects.clear(); }
+    virtual ~State() {
+        LOGLINE();
+        mObjects.clear();
+        LOGLINE();
+    }
 
 protected:
     virtual void StartArray();
