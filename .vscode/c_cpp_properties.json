@@ -1,8 +1,8 @@
 {
     "configurations": [
         {
-            "name": "Linux",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "name": "Linux/Windows",
+            "includePath": ["headers"]
         }
     ],
     "version": 4
