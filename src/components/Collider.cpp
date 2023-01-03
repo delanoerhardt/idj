@@ -14,20 +14,24 @@ void Collider::Render() {
 
     Vec2 centerCamera = center - Camera::sPos;
 
-    Vec2 point = (Vec2(mBox.x, mBox.y) - center).Rotate(angle) + centerCamera;
+    Vec2 initialPos =
+        mGameObject.mBox.Center() - Vec2{mBox.w / 2, mBox.h / 2}.Rotate(angle);
+    initialPos -= Camera::sPos;
+
+    Vec2 widthVec = Vec2{mBox.w, 0.0}.Rotate(angle);
+    Vec2 heightVec = Vec2{0.0, mBox.h}.Rotate(angle);
+
+    Vec2 point = initialPos;
     points[0] = {(int)point.x, (int)point.y};
     points[4] = {(int)point.x, (int)point.y};
 
-    point =
-        (Vec2(mBox.x + mBox.w, mBox.y) - center).Rotate(angle) + centerCamera;
+    point = initialPos + widthVec;
     points[1] = {(int)point.x, (int)point.y};
 
-    point = (Vec2(mBox.x + mBox.w, mBox.y + mBox.h) - center).Rotate(angle) +
-            centerCamera;
+    point = initialPos + widthVec + heightVec;
     points[2] = {(int)point.x, (int)point.y};
 
-    point =
-        (Vec2(mBox.x, mBox.y + mBox.h) - center).Rotate(angle) + centerCamera;
+    point = initialPos + heightVec;
     points[3] = {(int)point.x, (int)point.y};
 
     SDL_SetRenderDrawColor(Game::GetInstance().GetRenderer(), 255, 0, 0,
