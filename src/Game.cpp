@@ -6,7 +6,7 @@
 #include "Constants.h"
 #include "resources/InputManager.h"
 #include "resources/Resources.h"
-#include "states/TitleState.h"
+#include "states/BattleState.h"
 #include "util/Logger.h"
 
 Game *Game::sInstance;
@@ -67,7 +67,7 @@ Game::Game(std::string title, uint32_t width, uint32_t height)
         exit(1);
     }
 
-    mStoredState = new TitleState();
+    mStoredState = new BattleState();
 
     srand(time(NULL));
 }

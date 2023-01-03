@@ -2,13 +2,11 @@
 
 #include "State.h"
 
-class TitleState : public State {
+class BattleState : public State {
 public:
-    TitleState();
+    BattleState();
 
     virtual void Update(float dt);
 
     virtual void Resume();
-
-    virtual ~TitleState() {}
 };
