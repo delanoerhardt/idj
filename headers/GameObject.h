@@ -14,7 +14,7 @@ public:
 
     GameObject(float x, float y) : mBox{x, y, 0.0, 0.0} {}
 
-    GameObject(Rect r) : mBox{r.x, r.y, 0.0, 0.0} {}
+    GameObject(Rect r) : mBox{r.x, r.y, r.w, r.h} {}
 
     GameObject(Vec2 v) : mBox{v.x, v.y, 0.0, 0.0} {}
 
